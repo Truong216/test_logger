@@ -1,4 +1,10 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  // HttpException,
+  // HttpStatus,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -11,7 +17,13 @@ export class AppController {
   }
 
   @Post()
-  getHelloFromPost(): string {
-    return 'hello from post requeest';
+  getHelloFromPost() {
+    const a = {
+      message: 'd',
+      status: '12',
+      d: 0,
+    };
+    // throw new HttpException('Service timing not found', HttpStatus.NOT_FOUND);
+    return a;
   }
 }
