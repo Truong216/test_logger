@@ -7,26 +7,20 @@ export class LoggerMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     const oldWrite = res.write;
     const oldEnd = res.end;
-    const chunks = [];
     res.write = (...restArgs): any => {
-      chunks.push(Buffer.from(restArgs[0]));
       oldWrite.apply(res, restArgs);
     };
 
     res.end = async (...restArgs) => {
-      if (restArgs[0]) {
-        chunks.push(Buffer.from(restArgs[0]));
-      }
-      const body = Buffer.concat(chunks).toString('utf8');
       const logger = {
         timeStamp: new Date().toUTCString(),
         method: req.method,
         url: req.url,
         requestData: req.body,
-        message: body,
+        message: '',
         level: 'info',
       };
-      console.log(res);
+      await this.loggerService.createLogger(logger);
       oldEnd.apply(res, restArgs);
     };
     next();
